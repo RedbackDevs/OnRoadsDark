@@ -1,451 +1,405 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>On-Road Cost Calculator</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #e0eafc, #cfdef3);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-    /* Dark Mode Styles */
-    body.dark-mode {
-      background: linear-gradient(135deg, #1f1c2c, #928dab);
-      color: #f1f1f1;
-    }
-    .container {
-      background-color: #fff;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 550px;
-      transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-      position: relative;
-      margin-bottom: 20px;
-    }
-    body.dark-mode .container {
-      background-color: #333;
-      color: #f1f1f1;
-    }
-    .container:hover {
-      transform: translateY(-5px);
-    }
-    h1 {
-      text-align: center;
-      color: #1e3a8a;
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-    body.dark-mode h1 {
-      color: #a5d8ff;
-    }
-    .description {
-      text-align: center;
-      color: #64748b;
-      font-size: 14px;
-      margin-bottom: 30px;
-    }
-    body.dark-mode .description {
-      color: #ccc;
-    }
-    label {
-      display: block;
-      font-weight: bold;
-      color: #1e3a8a;
-      margin-bottom: 8px;
-    }
-    body.dark-mode label {
-      color: #a5d8ff;
-    }
-    input, select {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 16px;
-      box-sizing: border-box;
-      transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-      background-color: #fff;
-      color: #000;
-    }
-    body.dark-mode input,
-    body.dark-mode select {
-      background-color: #555;
-      color: #f1f1f1;
-      border-color: #777;
-    }
-    input:focus, select:focus {
-      border-color: #3b82f6;
-      outline: none;
-    }
-    button {
-      width: 100%;
-      padding: 14px;
-      background-color: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      margin-bottom: 20px;
-    }
-    button:hover {
-      background-color: #1e3a8a;
-      transform: scale(1.02);
-    }
-    #result {
-      margin-top: 30px;
-      padding: 20px;
-      background-color: #f8fafc;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      font-size: 16px;
-      line-height: 1.8;
-    }
-    body.dark-mode #result {
-      background-color: #444;
-      border-color: #666;
-    }
-    #result div {
-      margin-bottom: 10px;
-    }
-    .total {
-      font-weight: bold;
-      font-size: 22px;
-      color: #1e3a8a;
-      margin-top: 15px;
-    }
-    body.dark-mode .total {
-      color: #a5d8ff;
-    }
-    .error {
-      color: #dc2626;
-      font-weight: bold;
-      text-align: center;
-    }
-    /* Smaller Dark Mode Toggle Button */
-    #toggle-dark-mode {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #3b82f6;
-      border: none;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: background-color 0.3s ease;
-    }
-    #toggle-dark-mode:hover {
-      background-color: #1e3a8a;
-    }
-    /* Scrolling banner for tweets */
-    #tweet-banner {
-      width: 100%;
-      background-color: #f8fafc;
-      color: #1e3a8a;
-      padding: 10px;
-      border-top: 1px solid #e2e8f0;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-    body.dark-mode #tweet-banner {
-      background-color: #444;
-      color: #a5d8ff;
-      border-color: #666;
-    }
-    /* Adjust marquee styling */
-    #tweet-marquee {
-      display: block;
-      white-space: nowrap;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On-Road Cost Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px;
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        h1 {
+            text-align: center;
+            color: #1e3a8a;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .description {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-bottom: 8px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, select:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #1e3a8a;
+            transform: scale(1.02);
+        }
+        #dark-mode-toggle {
+            width: auto;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        #result div {
+            margin-bottom: 10px;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 22px;
+            color: #1e3a8a;
+            margin-top: 15px;
+        }
+        .error {
+            color: #dc2626;
+            font-weight: bold;
+            text-align: center;
+        }
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+        body.dark-mode .container {
+            background-color: #34495e;
+            color: #ecf0f1;
+        }
+        body.dark-mode label {
+            color: #ecf0f1;
+        }
+        body.dark-mode input, body.dark-mode select {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            border-color: #ecf0f1;
+        }
+        body.dark-mode button {
+            background-color: #2980b9;
+        }
+        body.dark-mode button:hover {
+            background-color: #1e3a8a;
+        }
+        body.dark-mode #result {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            border-color: #ecf0f1;
+        }
+        body.dark-mode .total {
+            color: #3498db;
+        }
+        body.dark-mode .error {
+            color: #e74c3c;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <button id="toggle-dark-mode">Dark Mode</button>
-    <h1>On-Road Cost Calculator</h1>
-    <p class="description">Enter the vehicle price and select your state to calculate the total on-road cost.</p>
-    
-    <label for="price">Price including GST ($):</label>
-    <input type="number" id="price" name="price" min="0" step="0.01" required>
-    
-    <label for="state">Select State/Territory:</label>
-    <select id="state" name="state">
-      <option value="" disabled selected>Select a state</option>
-      <option value="VIC">Victoria</option>
-      <option value="NSW">New South Wales</option>
-      <option value="QLD">Queensland</option>
-      <option value="TAS">Tasmania</option>
-      <option value="SA">South Australia</option>
-      <option value="WA">Western Australia</option>
-      <option value="NT">Northern Territory</option>
-      <option value="ACT">Australian Capital Territory</option>
-    </select>
-    
-    <!-- QLD Vehicle Type Dropdown -->
-    <div id="qld-options" style="display: none;">
-      <label for="qld-vehicle-type">Select Vehicle Type:</label>
-      <select id="qld-vehicle-type">
-        <option value="" disabled selected>Select vehicle type</option>
-        <option value="hybrid">Hybrid/Electric</option>
-        <option value="1-4cyl">1-4 cylinders, 2 rotors, or steam-powered</option>
-        <option value="5-6cyl">5-6 cylinders, 3 rotors</option>
-        <option value="7+cyl">7 or more cylinders</option>
-      </select>
+    <div class="container">
+        <h1>On-Road Cost Calculator</h1>
+        <button id="dark-mode-toggle">Toggle Dark Mode</button>
+        <p class="description">Enter the vehicle price and select your state to calculate the total on-road cost.</p>
+        
+        <label for="price">Price including GST ($):</label>
+        <input type="number" id="price" name="price" min="0" step="0.01" required>
+        
+        <label for="state">Select State/Territory:</label>
+        <select id="state" name="state">
+            <option value="" disabled selected>Select a state</option>
+            <option value="VIC">Victoria</option>
+            <option value="NSW">New South Wales</option>
+            <option value="QLD">Queensland</option>
+            <option value="TAS">Tasmania</option>
+            <option value="SA">South Australia</option>
+            <option value="WA">Western Australia</option>
+            <option value="NT">Northern Territory</option>
+            <option value="ACT">Australian Capital Territory</option>
+        </select>
+        
+        <!-- QLD Vehicle Type Dropdown -->
+        <div id="qld-options" style="display: none;">
+            <label for="qld-vehicle-type">Select Vehicle Type:</label>
+            <select id="qld-vehicle-type">
+                <option value="" disabled selected>Select vehicle type</option>
+                <option value="hybrid">Hybrid/Electric</option>
+                <option value="1-4cyl">1-4 cylinders, 2 rotors, or steam-powered</option>
+                <option value="5-6cyl">5-6 cylinders, 3 rotors</option>
+                <option value="7+cyl">7 or more cylinders</option>
+            </select>
+        </div>
+        
+        <!-- ACT Performance Rating Dropdown -->
+        <div id="act-options" style="display: none;">
+            <label for="act-performance-rating">Select Performance Rating:</label>
+            <select id="act-performance-rating">
+                <option value="" disabled selected>Select performance rating</option>
+                <option value="A">A (Zero-emission)</option>
+                <option value="B">B (131-175g/km CO₂)</option>
+                <option value="C">C (176-220g/km CO₂)</option>
+                <option value="D">D (over 220g/km CO₂)</option>
+            </select>
+        </div>
+        
+        <button id="calculate">Calculate Cost</button>
+        <div id="result"></div>
     </div>
     
-    <!-- ACT Performance Rating Dropdown -->
-    <div id="act-options" style="display: none;">
-      <label for="act-performance-rating">Select Performance Rating:</label>
-      <select id="act-performance-rating">
-        <option value="" disabled selected>Select performance rating</option>
-        <option value="A">A (Zero-emission)</option>
-        <option value="B">B (131-175g/km CO₂)</option>
-        <option value="C">C (176-220g/km CO₂)</option>
-        <option value="D">D (over 220g/km CO₂)</option>
-      </select>
-    </div>
-    
-    <button id="calculate">Calculate Cost</button>
-    <div id="result"></div>
-  </div>
-  
-  <!-- Scrolling banner for recent #NRLVegas tweets -->
-  <div id="tweet-banner">
-    <marquee id="tweet-marquee" behavior="scroll" direction="left" scrollamount="5">
-      <a class="twitter-timeline" data-chrome="noheader nofooter noborders" data-tweet-limit="5" href="https://twitter.com/hashtag/NRLVegas?src=hash">
-        #NRLVegas Tweets
-      </a>
-    </marquee>
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-  </div>
-  
-  <script>
-    // Toggle Dark Mode functionality
-    document.getElementById('toggle-dark-mode').addEventListener('click', function() {
-      document.body.classList.toggle('dark-mode');
-      this.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
-    });
-    
-    // State-specific data with fees and stamp duty calculations
-    const stateData = {
-      VIC: {
-        registration: 800,
-        admin: 40,
-        stampDuty: function(price) {
-          if (price <= 75000) return price * 0.042;
-          else if (price <= 99000) return price * 0.052;
-          else if (price <= 149999) return price * 0.07;
-          else return price * 0.09;
-        }
-      },
-      NSW: {
-        registration: 700,
-        admin: 30,
-        stampDuty: function(price) {
-          if (price <= 44999) {
-            return (price / 100) * 3;
-          } else {
-            return 1350 + ((price - 45000) / 100) * 5;
-          }
-        }
-      },
-      QLD: {
-        registration: 650,
-        admin: 25,
-        stampDuty: function(price, vehicleType) {
-          let rate1, rate2;
-          switch (vehicleType) {
-            case 'hybrid':
-              rate1 = 2;
-              rate2 = 4;
-              break;
-            case '1-4cyl':
-              rate1 = 3;
-              rate2 = 5;
-              break;
-            case '5-6cyl':
-              rate1 = 3.5;
-              rate2 = 5.5;
-              break;
-            case '7+cyl':
-              rate1 = 4;
-              rate2 = 6;
-              break;
-            default:
-              return 0;
-          }
-          if (price <= 100000) {
-            return (price / 100) * rate1;
-          } else {
-            return (100000 / 100) * rate1 + ((price - 100000) / 100) * rate2;
-          }
-        }
-      },
-      TAS: {
-        registration: 600,
-        admin: 20,
-        stampDuty: function(price) {
-          if (price <= 600) {
-            return 20;
-          } else if (price <= 34999) {
-            return (price / 100) * 3;
-          } else if (price <= 39999) {
-            return 1050 + ((price - 35000) / 100) * 11;
-          } else {
-            return (price / 100) * 4;
-          }
-        }
-      },
-      SA: {
-        registration: 750,
-        admin: 35,
-        stampDuty: function(price) {
-          if (price <= 1000) {
-            return Math.max(5, (price / 100) * 1);
-          } else if (price <= 2000) {
-            return 10 + ((price - 1000) / 100) * 2;
-          } else if (price <= 3000) {
-            return 30 + ((price - 2000) / 100) * 3;
-          } else {
-            return 60 + ((price - 3000) / 100) * 4;
-          }
-        }
-      },
-      WA: {
-        registration: 700,
-        admin: 30,
-        stampDuty: function(price) {
-          if (price <= 25000) {
-            return (2.75 / 100) * price;
-          } else if (price <= 50000) {
-            const additionalRate = (price - 25000) / 6666.66;
-            const totalRate = 2.75 + additionalRate;
-            return (totalRate / 100) * price;
-          } else {
-            return (6.5 / 100) * price;
-          }
-        }
-      },
-      NT: {
-        registration: 800,
-        admin: 25,
-        stampDuty: function(price) {
-          return (price / 100) * 3 + 19;
-        }
-      },
-      ACT: {
-        registration: 900,
-        admin: 20,
-        stampDuty: function(price, performanceRating) {
-          switch (performanceRating) {
-            case 'A':
-              return 0;
-            case 'B':
-              if (price <= 45000) {
-                return (price / 100) * 1;
-              } else {
-                return 450 + ((price - 45000) / 100) * 2;
-              }
-            case 'C':
-              if (price <= 45000) {
-                return (price / 100) * 3;
-              } else {
-                return 1350 + ((price - 45000) / 100) * 5;
-              }
-            case 'D':
-              if (price <= 45000) {
-                return (price / 100) * 4;
-              } else {
-                return 1800 + ((price - 45000) / 100) * 6;
-              }
-            default:
-              return 0;
-          }
-        }
-      }
-    };
+    <script>
+        // State-specific data with fees and stamp duty calculations
+        const stateData = {
+            VIC: {
+                registration: 800,
+                admin: 40,
+                stampDuty: function(price) {
+                    if (price <= 75000) return price * 0.042; // 4.2%
+                    else if (price <= 99000) return price * 0.052; // 5.2%
+                    else if (price <= 149999) return price * 0.07; // 7%
+                    else return price * 0.09; // 9%
+                }
+            },
+            NSW: {
+                registration: 700,
+                admin: 30,
+                stampDuty: function(price) {
+                    if (price <= 44999) {
+                        return (price / 100) * 3;
+                    } else {
+                        return 1350 + ((price - 45000) / 100) * 5;
+                    }
+                }
+            },
+            QLD: {
+                registration: 650,
+                admin: 25,
+                stampDuty: function(price, vehicleType) {
+                    let rate1, rate2;
+                    switch (vehicleType) {
+                        case 'hybrid':
+                            rate1 = 2;
+                            rate2 = 4;
+                            break;
+                        case '1-4cyl':
+                            rate1 = 3;
+                            rate2 = 5;
+                            break;
+                        case '5-6cyl':
+                            rate1 = 3.5;
+                            rate2 = 5.5;
+                            break;
+                        case '7+cyl':
+                            rate1 = 4;
+                            rate2 = 6;
+                            break;
+                        default:
+                            return 0; // Error case, handled in validation
+                    }
+                    if (price <= 100000) {
+                        return (price / 100) * rate1;
+                    } else {
+                        return (100000 / 100) * rate1 + ((price - 100000) / 100) * rate2;
+                    }
+                }
+            },
+            TAS: {
+                registration: 600,
+                admin: 20,
+                stampDuty: function(price) {
+                    if (price <= 600) {
+                        return 20;
+                    } else if (price <= 34999) {
+                        return (price / 100) * 3;
+                    } else if (price <= 39999) {
+                        return 1050 + ((price - 35000) / 100) * 11;
+                    } else {
+                        return (price / 100) * 4;
+                    }
+                }
+            },
+            SA: {
+                registration: 750,
+                admin: 35,
+                stampDuty: function(price) {
+                    if (price <= 1000) {
+                        return Math.max(5, Math.ceil(price / 100) * 1);
+                    } else if (price <= 2000) {
+                        return 10 + Math.ceil((price - 1000) / 100) * 2;
+                    } else if (price <= 3000) {
+                        return 30 + Math.ceil((price - 2000) / 100) * 3;
+                    } else {
+                        return 60 + Math.ceil((price - 3000) / 100) * 4;
+                    }
+                }
+            },
+            WA: {
+                registration: 700,
+                admin: 30,
+                stampDuty: function(price) {
+                    if (price <= 25000) {
+                        return (2.75 / 100) * price;
+                    } else if (price <= 50000) {
+                        const additionalRate = (price - 25000) / 6666.66;
+                        const totalRate = 2.75 + additionalRate;
+                        return (totalRate / 100) * price;
+                    } else {
+                        return (6.5 / 100) * price;
+                    }
+                }
+            },
+            NT: {
+                registration: 800,
+                admin: 25,
+                stampDuty: function(price) {
+                    return (price / 100) * 3 + 19; // Includes $19 transfer fee
+                }
+            },
+            ACT: {
+                registration: 900,
+                admin: 20,
+                stampDuty: function(price, performanceRating) {
+                    switch (performanceRating) {
+                        case 'A':
+                            return 0;
+                        case 'B':
+                            if (price <= 45000) {
+                                return (price / 100) * 1;
+                            } else {
+                                return 450 + ((price - 45000) / 100) * 2;
+                            }
+                        case 'C':
+                            if (price <= 45000) {
+                                return (price / 100) * 3;
+                            } else {
+                                return 1350 + ((price - 45000) / 100) * 5;
+                            }
+                        case 'D':
+                            if (price <= 45000) {
+                                return (price / 100) * 4;
+                            } else {
+                                return 1800 + ((price - 45000) / 100) * 6;
+                            }
+                        default:
+                            return 0; // Error case, handled in validation
+                    }
+                }
+            }
+        };
 
-    // Show/hide additional options based on state selection
-    const stateSelect = document.getElementById('state');
-    const qldOptions = document.getElementById('qld-options');
-    const actOptions = document.getElementById('act-options');
+        // Show/hide additional options based on state selection
+        const stateSelect = document.getElementById('state');
+        const qldOptions = document.getElementById('qld-options');
+        const actOptions = document.getElementById('act-options');
 
-    stateSelect.addEventListener('change', () => {
-      const state = stateSelect.value;
-      qldOptions.style.display = state === 'QLD' ? 'block' : 'none';
-      actOptions.style.display = state === 'ACT' ? 'block' : 'none';
-    });
+        stateSelect.addEventListener('change', () => {
+            const state = stateSelect.value;
+            qldOptions.style.display = state === 'QLD' ? 'block' : 'none';
+            actOptions.style.display = state === 'ACT' ? 'block' : 'none';
+        });
 
-    // Calculate button event listener
-    document.getElementById('calculate').addEventListener('click', () => {
-      const price = parseFloat(document.getElementById('price').value);
-      const state = document.getElementById('state').value;
-      const resultDiv = document.getElementById('result');
+        // Dark mode toggle
+        const toggleButton = document.getElementById('dark-mode-toggle');
+        toggleButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
 
-      // Clear previous result
-      resultDiv.innerHTML = '';
+        // Calculate button event listener
+        document.getElementById('calculate').addEventListener('click', () => {
+            const price = parseFloat(document.getElementById('price').value);
+            const state = document.getElementById('state').value;
+            const resultDiv = document.getElementById('result');
 
-      // Input validation
-      if (isNaN(price) || price <= 0) {
-        resultDiv.innerHTML = '<div class="error">Please enter a valid price greater than 0.</div>';
-        return;
-      }
-      if (!state || !stateData[state]) {
-        resultDiv.innerHTML = '<div class="error">Please select a valid state or territory.</div>';
-        return;
-      }
-      if (state === 'QLD' && !document.getElementById('qld-vehicle-type').value) {
-        resultDiv.innerHTML = '<div class="error">Please select a vehicle type for Queensland.</div>';
-        return;
-      }
-      if (state === 'ACT' && !document.getElementById('act-performance-rating').value) {
-        resultDiv.innerHTML = '<div class="error">Please select a performance rating for ACT.</div>';
-        return;
-      }
+            // Clear previous result
+            resultDiv.innerHTML = '';
 
-      // Calculate costs
-      const data = stateData[state];
-      let stampDuty;
-      if (state === 'QLD') {
-        const vehicleType = document.getElementById('qld-vehicle-type').value;
-        stampDuty = data.stampDuty(price, vehicleType);
-      } else if (state === 'ACT') {
-        const performanceRating = document.getElementById('act-performance-rating').value;
-        stampDuty = data.stampDuty(price, performanceRating);
-      } else {
-        stampDuty = data.stampDuty(price);
-      }
-      const registration = data.registration;
-      const admin = data.admin;
-      const totalCost = price + stampDuty + registration + admin;
+            // Input validation
+            if (isNaN(price) || price <= 0) {
+                resultDiv.innerHTML = '<div class="error">Please enter a valid price greater than 0.</div>';
+                return;
+            }
+            if (!state || !stateData[state]) {
+                resultDiv.innerHTML = '<div class="error">Please select a valid state or territory.</div>';
+                return;
+            }
+            if (state === 'QLD' && !document.getElementById('qld-vehicle-type').value) {
+                resultDiv.innerHTML = '<div class="error">Please select a vehicle type for Queensland.</div>';
+                return;
+            }
+            if (state === 'ACT' && !document.getElementById('act-performance-rating').value) {
+                resultDiv.innerHTML = '<div class="error">Please select a performance rating for ACT.</div>';
+                return;
+            }
 
-      // Format numbers as currency
-      const formatCurrency = num => `$${num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+            // Calculate costs
+            const data = stateData[state];
+            let stampDuty;
+            if (state === 'QLD') {
+                const vehicleType = document.getElementById('qld-vehicle-type').value;
+                stampDuty = data.stampDuty(price, vehicleType);
+            } else if (state === 'ACT') {
+                const performanceRating = document.getElementById('act-performance-rating').value;
+                stampDuty = data.stampDuty(price, performanceRating);
+            } else {
+                stampDuty = data.stampDuty(price);
+            }
+            const registration = data.registration;
+            const admin = data.admin;
+            const totalCost = price + stampDuty + registration + admin;
 
-      // Display the breakdown
-      resultDiv.innerHTML = `
-        <div><strong>Base Price:</strong> ${formatCurrency(price)}</div>
-        <div><strong>Stamp Duty:</strong> ${formatCurrency(stampDuty)}</div>
-        <div><strong>Registration (12 months):</strong> ${formatCurrency(registration)}</div>
-        <div><strong>Admin Charges:</strong> ${formatCurrency(admin)}</div>
-        <div class="total">Total On-Road Cost: ${formatCurrency(totalCost)}</div>
-      `;
-    });
-  </script>
+            // Format numbers as currency
+            const formatCurrency = num => `$${num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+
+            // Display the breakdown
+            resultDiv.innerHTML = `
+                <div><strong>Base Price:</strong> ${formatCurrency(price)}</div>
+                <div><strong>Stamp Duty:</strong> ${formatCurrency(stampDuty)}</div>
+                <div><strong>Registration (12 months):</strong> ${formatCurrency(registration)}</div>
+                <div><strong>Admin Charges:</strong> ${formatCurrency(admin)}</div>
+                <div class="total">Total On-Road Cost: ${formatCurrency(totalCost)}</div>
+            `;
+        });
+    </script>
 </body>
 </html>
