@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
       min-height: 100vh;
       transition: background 0.3s ease, color 0.3s ease;
@@ -30,6 +30,7 @@
       max-width: 550px;
       transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
       position: relative;
+      margin-bottom: 20px;
     }
     body.dark-mode .container {
       background-color: #333;
@@ -134,22 +135,42 @@
       font-weight: bold;
       text-align: center;
     }
-    /* Dark Mode Toggle Button - positioned at top-right of container */
+    /* Smaller Dark Mode Toggle Button */
     #toggle-dark-mode {
       position: absolute;
-      top: 15px;
-      right: 15px;
+      top: 10px;
+      right: 10px;
       background-color: #3b82f6;
       border: none;
       color: white;
-      padding: 8px 12px;
+      padding: 4px 8px;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 12px;
       transition: background-color 0.3s ease;
     }
     #toggle-dark-mode:hover {
       background-color: #1e3a8a;
+    }
+    /* Scrolling banner for tweets */
+    #tweet-banner {
+      width: 100%;
+      background-color: #f8fafc;
+      color: #1e3a8a;
+      padding: 10px;
+      border-top: 1px solid #e2e8f0;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    body.dark-mode #tweet-banner {
+      background-color: #444;
+      color: #a5d8ff;
+      border-color: #666;
+    }
+    /* Adjust marquee styling */
+    #tweet-marquee {
+      display: block;
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -203,14 +224,23 @@
     <div id="result"></div>
   </div>
   
+  <!-- Scrolling banner for recent #NRLVegas tweets -->
+  <div id="tweet-banner">
+    <marquee id="tweet-marquee" behavior="scroll" direction="left" scrollamount="5">
+      <a class="twitter-timeline" data-chrome="noheader nofooter noborders" data-tweet-limit="5" href="https://twitter.com/hashtag/NRLVegas?src=hash">
+        #NRLVegas Tweets
+      </a>
+    </marquee>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+  
   <script>
     // Toggle Dark Mode functionality
     document.getElementById('toggle-dark-mode').addEventListener('click', function() {
       document.body.classList.toggle('dark-mode');
-      // Change button text based on mode
       this.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
     });
-
+    
     // State-specific data with fees and stamp duty calculations
     const stateData = {
       VIC: {
