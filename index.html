@@ -75,11 +75,6 @@
             background-color: #1e3a8a;
             transform: scale(1.02);
         }
-        #dark-mode-toggle {
-            width: auto;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
         #result {
             margin-top: 30px;
             padding: 20px;
@@ -103,45 +98,11 @@
             font-weight: bold;
             text-align: center;
         }
-        /* Dark Mode Styles */
-        body.dark-mode {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-        }
-        body.dark-mode .container {
-            background-color: #34495e;
-            color: #ecf0f1;
-        }
-        body.dark-mode label {
-            color: #ecf0f1;
-        }
-        body.dark-mode input, body.dark-mode select {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            border-color: #ecf0f1;
-        }
-        body.dark-mode button {
-            background-color: #2980b9;
-        }
-        body.dark-mode button:hover {
-            background-color: #1e3a8a;
-        }
-        body.dark-mode #result {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            border-color: #ecf0f1;
-        }
-        body.dark-mode .total {
-            color: #3498db;
-        }
-        body.dark-mode .error {
-            color: #e74c3c;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>On-Road Cost Calculator</h1>
-        <button id="dark-mode-toggle">Toggle Dark Mode</button>
         <p class="description">Enter the vehicle price and select your state to calculate the total on-road cost.</p>
         
         <label for="price">Price including GST ($):</label>
@@ -181,6 +142,16 @@
                 <option value="B">B (131-175g/km CO₂)</option>
                 <option value="C">C (176-220g/km CO₂)</option>
                 <option value="D">D (over 220g/km CO₂)</option>
+            </select>
+        </div>
+        
+        <!-- SA Vehicle Type Dropdown -->
+        <div id="sa-options" style="display: none;">
+            <label for="sa-vehicle-type">Select Vehicle Type:</label>
+            <select id="sa-vehicle-type">
+                <option value="" disabled selected>Select vehicle type</option>
+                <option value="non-commercial">Non-Commercial (e.g., sedans, station wagons)</option>
+                <option value="commercial">Commercial (e.g., utes, vans)</option>
             </select>
         </div>
         
@@ -262,15 +233,27 @@
             SA: {
                 registration: 750,
                 admin: 35,
-                stampDuty: function(price) {
-                    if (price <= 1000) {
-                        return Math.max(5, Math.ceil(price / 100) * 1);
-                    } else if (price <= 2000) {
-                        return 10 + Math.ceil((price - 1000) / 100) * 2;
-                    } else if (price <= 3000) {
-                        return 30 + Math.ceil((price - 2000) / 100) * 3;
+                stampDuty: function(price, vehicleType) {
+                    if (vehicleType === 'non-commercial') {
+                        if (price <= 1000) {
+                            return Math.max(5, Math.ceil(price / 100) * 1);
+                        } else if (price <= 2000) {
+                            return 10 + Math.ceil((price - 1000) / 100) * 2;
+                        } else if (price <= 3000) {
+                            return 30 + Math.ceil((price - 2000) / 100) * 3;
+                        } else {
+                            return 60 + Math.ceil((price - 3000) / 100) * 4;
+                        }
+                    } else if (vehicleType === 'commercial') {
+                        if (price <= 1000) {
+                            return Math.max(5, Math.ceil(price / 100) * 1);
+                        } else if (price <= 2000) {
+                            return 10 + Math.ceil((price - 1000) / 100) * 2;
+                        } else {
+                            return 30 + Math.ceil((price - 2000) / 100) * 3;
+                        }
                     } else {
-                        return 60 + Math.ceil((price - 3000) / 100) * 4;
+                        return 0; // Error case
                     }
                 }
             },
@@ -332,17 +315,13 @@
         const stateSelect = document.getElementById('state');
         const qldOptions = document.getElementById('qld-options');
         const actOptions = document.getElementById('act-options');
+        const saOptions = document.getElementById('sa-options');
 
         stateSelect.addEventListener('change', () => {
             const state = stateSelect.value;
             qldOptions.style.display = state === 'QLD' ? 'block' : 'none';
             actOptions.style.display = state === 'ACT' ? 'block' : 'none';
-        });
-
-        // Dark mode toggle
-        const toggleButton = document.getElementById('dark-mode-toggle');
-        toggleButton.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
+            saOptions.style.display = state === 'SA' ? 'block' : 'none';
         });
 
         // Calculate button event listener
@@ -371,6 +350,10 @@
                 resultDiv.innerHTML = '<div class="error">Please select a performance rating for ACT.</div>';
                 return;
             }
+            if (state === 'SA' && !document.getElementById('sa-vehicle-type').value) {
+                resultDiv.innerHTML = '<div class="error">Please select a vehicle type for South Australia.</div>';
+                return;
+            }
 
             // Calculate costs
             const data = stateData[state];
@@ -381,6 +364,9 @@
             } else if (state === 'ACT') {
                 const performanceRating = document.getElementById('act-performance-rating').value;
                 stampDuty = data.stampDuty(price, performanceRating);
+            } else if (state === 'SA') {
+                const vehicleType = document.getElementById('sa-vehicle-type').value;
+                stampDuty = data.stampDuty(price, vehicleType);
             } else {
                 stampDuty = data.stampDuty(price);
             }
