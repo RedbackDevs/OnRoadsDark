@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>On-Road Cost Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, #e0eafc, #cfdef3);
             margin: 0;
             padding: 0;
@@ -17,7 +19,7 @@
         }
         .container {
             background-color: #fff;
-            padding: 40px;
+            padding: 50px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             width: 100%;
@@ -50,13 +52,14 @@
             padding: 12px;
             margin-bottom: 20px;
             border: 2px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
             box-sizing: border-box;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: border-color 0.3s ease;
         }
         input:focus, select:focus {
-            border-color: #3b82f6;
+            border-color: #10b981;
             outline: none;
         }
         button {
@@ -72,43 +75,59 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
         button:hover {
-            background-color: #1e3a8a;
-            transform: scale(1.02);
+            background-color: #2563eb;
+            transform: scale(1.05);
         }
         #result {
             margin-top: 30px;
-            padding: 20px;
-            background-color: #f8fafc;
+            padding: 25px;
+            background-color: #f0f9ff;
+            border: 1px solid #bfdbfe;
             border-radius: 10px;
-            border: 1px solid #e2e8f0;
             font-size: 16px;
             line-height: 1.8;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
         }
         #result div {
             margin-bottom: 10px;
         }
         .total {
+            font-size: 24px;
+            color: #1e40af;
+            margin-top: 20px;
             font-weight: bold;
-            font-size: 22px;
-            color: #1e3a8a;
-            margin-top: 15px;
         }
         .error {
+            background-color: #fee2e2;
             color: #dc2626;
-            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
             text-align: center;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            button {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>On-Road Cost Calculator</h1>
+        <h1><i class="fas fa-car"></i> On-Road Cost Calculator</h1>
         <p class="description">Enter the vehicle price and select your state to calculate the total on-road cost.</p>
         
-        <label for="price">Price including GST ($):</label>
+        <label for="price"><i class="fas fa-dollar-sign"></i> Price including GST ($):</label>
         <input type="number" id="price" name="price" min="0" step="0.01" required>
         
-        <label for="state">Select State/Territory:</label>
+        <label for="state"><i class="fas fa-map-marker-alt"></i> Select State/Territory:</label>
         <select id="state" name="state">
             <option value="" disabled selected>Select a state</option>
             <option value="VIC">Victoria</option>
@@ -142,16 +161,6 @@
                 <option value="B">B (131-175g/km CO₂)</option>
                 <option value="C">C (176-220g/km CO₂)</option>
                 <option value="D">D (over 220g/km CO₂)</option>
-            </select>
-        </div>
-        
-        <!-- SA Vehicle Type Dropdown -->
-        <div id="sa-options" style="display: none;">
-            <label for="sa-vehicle-type">Select Vehicle Type:</label>
-            <select id="sa-vehicle-type">
-                <option value="" disabled selected>Select vehicle type</option>
-                <option value="non-commercial">Non-Commercial (e.g., sedans, station wagons)</option>
-                <option value="commercial">Commercial (e.g., utes, vans)</option>
             </select>
         </div>
         
@@ -233,27 +242,15 @@
             SA: {
                 registration: 750,
                 admin: 35,
-                stampDuty: function(price, vehicleType) {
-                    if (vehicleType === 'non-commercial') {
-                        if (price <= 1000) {
-                            return Math.max(5, Math.ceil(price / 100) * 1);
-                        } else if (price <= 2000) {
-                            return 10 + Math.ceil((price - 1000) / 100) * 2;
-                        } else if (price <= 3000) {
-                            return 30 + Math.ceil((price - 2000) / 100) * 3;
-                        } else {
-                            return 60 + Math.ceil((price - 3000) / 100) * 4;
-                        }
-                    } else if (vehicleType === 'commercial') {
-                        if (price <= 1000) {
-                            return Math.max(5, Math.ceil(price / 100) * 1);
-                        } else if (price <= 2000) {
-                            return 10 + Math.ceil((price - 1000) / 100) * 2;
-                        } else {
-                            return 30 + Math.ceil((price - 2000) / 100) * 3;
-                        }
+                stampDuty: function(price) {
+                    if (price <= 1000) {
+                        return Math.max(5, (price / 100) * 1);
+                    } else if (price <= 2000) {
+                        return 10 + ((price - 1000) / 100) * 2;
+                    } else if (price <= 3000) {
+                        return 30 + ((price - 2000) / 100) * 3;
                     } else {
-                        return 0; // Error case
+                        return 60 + ((price - 3000) / 100) * 4;
                     }
                 }
             },
@@ -315,13 +312,11 @@
         const stateSelect = document.getElementById('state');
         const qldOptions = document.getElementById('qld-options');
         const actOptions = document.getElementById('act-options');
-        const saOptions = document.getElementById('sa-options');
 
         stateSelect.addEventListener('change', () => {
             const state = stateSelect.value;
             qldOptions.style.display = state === 'QLD' ? 'block' : 'none';
             actOptions.style.display = state === 'ACT' ? 'block' : 'none';
-            saOptions.style.display = state === 'SA' ? 'block' : 'none';
         });
 
         // Calculate button event listener
@@ -330,28 +325,29 @@
             const state = document.getElementById('state').value;
             const resultDiv = document.getElementById('result');
 
-            // Clear previous result
+            // Clear previous result and set opacity to 0
             resultDiv.innerHTML = '';
+            resultDiv.style.opacity = '0';
 
             // Input validation
             if (isNaN(price) || price <= 0) {
                 resultDiv.innerHTML = '<div class="error">Please enter a valid price greater than 0.</div>';
+                resultDiv.style.opacity = '1';
                 return;
             }
             if (!state || !stateData[state]) {
                 resultDiv.innerHTML = '<div class="error">Please select a valid state or territory.</div>';
+                resultDiv.style.opacity = '1';
                 return;
             }
             if (state === 'QLD' && !document.getElementById('qld-vehicle-type').value) {
                 resultDiv.innerHTML = '<div class="error">Please select a vehicle type for Queensland.</div>';
+                resultDiv.style.opacity = '1';
                 return;
             }
             if (state === 'ACT' && !document.getElementById('act-performance-rating').value) {
                 resultDiv.innerHTML = '<div class="error">Please select a performance rating for ACT.</div>';
-                return;
-            }
-            if (state === 'SA' && !document.getElementById('sa-vehicle-type').value) {
-                resultDiv.innerHTML = '<div class="error">Please select a vehicle type for South Australia.</div>';
+                resultDiv.style.opacity = '1';
                 return;
             }
 
@@ -364,9 +360,6 @@
             } else if (state === 'ACT') {
                 const performanceRating = document.getElementById('act-performance-rating').value;
                 stampDuty = data.stampDuty(price, performanceRating);
-            } else if (state === 'SA') {
-                const vehicleType = document.getElementById('sa-vehicle-type').value;
-                stampDuty = data.stampDuty(price, vehicleType);
             } else {
                 stampDuty = data.stampDuty(price);
             }
@@ -385,6 +378,11 @@
                 <div><strong>Admin Charges:</strong> ${formatCurrency(admin)}</div>
                 <div class="total">Total On-Road Cost: ${formatCurrency(totalCost)}</div>
             `;
+
+            // Trigger the fade-in animation
+            requestAnimationFrame(() => {
+                resultDiv.style.opacity = '1';
+            });
         });
     </script>
 </body>
